@@ -1,0 +1,19 @@
+CREATE OR REPLACE TABLE `wh2h-master.wh2hdataset.WH2H_GuestStats` AS
+SELECT
+  guest,
+  episode_num,
+
+  COUNT(*) AS guest_total_calls_in_episode,
+
+  COUNTIF(followup_success = 'success') AS guest_successes_in_episode,
+  COUNTIF(followup_success = 'unsuccessful') AS guest_failures_in_episode,
+  COUNTIF(followup_success = 'kinda') AS guest_kinda_in_episode,
+
+  SAFE_DIVIDE(
+    COUNTIF(followup_success = 'success'),
+    COUNT(*) 
+  ) AS guest_success_rate_in_episode
+
+FROM `wh2h-master.wh2hdataset.Heretohelp`
+WHERE guest IS NOT NULL AND guest != ''
+GROUP BY guest, episode_num;
