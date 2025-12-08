@@ -1,0 +1,25 @@
+CREATE OR REPLACE TABLE `wh2h-master.wh2hdataset.WH2H_ForTableau` AS
+SELECT
+    b.*,
+
+    -- Episode-level stats
+    es.episode_total_callers,
+    es.episode_successes,
+    es.episode_failures,
+    es.episode_kinda,
+    es.episode_total_followups,
+    es.episode_success_rate,
+
+    -- Guest stats (NULL when no guest)
+    gs.guest_total_calls_in_episode,
+    gs.guest_successes_in_episode,
+    gs.guest_failures_in_episode,
+    gs.guest_kinda_in_episode,
+    gs.guest_success_rate_in_episode
+
+FROM `wh2h-master.wh2hdataset.Heretohelp` b
+LEFT JOIN `wh2h-master.wh2hdataset.WH2H_EpisodeStats` es
+    USING (episode_num)
+LEFT JOIN `wh2h-master.wh2hdataset.WH2H_GuestStats` gs
+    ON b.episode_num = gs.episode_num
+    AND b.guest = gs.guest;
