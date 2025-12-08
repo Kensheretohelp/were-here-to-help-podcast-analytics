@@ -1,0 +1,13 @@
+/sql
+    WH2H_Base.sql
+    EpisodeStats.sql
+    GuestStats.sql
+    FinalTable.sql
+    README.md
+
+/data
+    WH2H_ForTableau.csv
+
+/docs
+    dashboard screenshots
+    data dictionary
