@@ -1,0 +1,20 @@
+CREATE OR REPLACE TABLE `wh2h-master.wh2hdataset.WH2H_EpisodeStats` AS
+SELECT
+  episode_num,
+
+  COUNT(*) AS episode_total_callers,
+
+  COUNTIF(followup_success = 'success') AS episode_successes,
+  COUNTIF(followup_success = 'unsuccessful') AS episode_failures,
+  COUNTIF(followup_success = 'kinda') AS episode_kinda,
+
+  -- TRUE only when is_explicit_followup = "TRUE"
+  COUNTIF(LOWER(is_explicit_followup) = 'true') AS episode_total_followups,
+
+  SAFE_DIVIDE(
+    COUNTIF(followup_success = 'success'),
+    COUNTIF(LOWER(is_explicit_followup) = 'true')
+  ) AS episode_success_rate
+
+FROM `wh2h-master.wh2hdataset.Heretohelp`
+GROUP BY episode_num;
